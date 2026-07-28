@@ -6,7 +6,7 @@ const db = new Database(
 );
 
 const axios = require('axios');
-const FASTAPI_URL = 'http://127.0.0.1:8000/predict';   // Your FastAPI URL
+// const FASTAPI_URL = 'http://127.0.0.1:8000/predict';  
 
 const mlapi = async (req, res, manufacturer, batch_number, serial_number, manuf_date, expiry_date, nafdac_reg) => {
   try {
@@ -19,7 +19,7 @@ const mlapi = async (req, res, manufacturer, batch_number, serial_number, manuf_
       nafdac_reg: nafdac_reg || "N/A"
     };
 
-    const mlResponse = await axios.post(FASTAPI_URL, mlPayload);
+    const mlResponse = await axios.post(process.env.FASTAPI_URL, mlPayload);
 
     return res.status(200).json({
       status: mlResponse.data.status,

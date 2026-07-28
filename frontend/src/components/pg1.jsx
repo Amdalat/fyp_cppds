@@ -2,6 +2,8 @@ import { useState } from 'react'
 import '../index.css'
 import Help from './help';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function Pg1() {
     const [showHelp, setShowHelp] = useState(false);
     const [isTyping, setIsTyping] = useState(true);
@@ -63,7 +65,7 @@ function Pg1() {
             return;
         }
 
-        const response = await fetch("http://localhost:5000/drug/db", {
+        const response = await fetch(`${API_URL}/drug/db`, {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
@@ -155,7 +157,7 @@ function Pg1() {
             return;
         }
 
-        const response =await fetch("http://localhost:5000/drug", {
+        const response =await fetch(`${API_URL}/drug`, {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
