@@ -13,12 +13,6 @@ feature_columns = joblib.load("feature_columns1.pkl")
 
 THRESHOLD = 0.25
 
-# missing = set(feature_columns) - set(X.columns)
-# extra = set(X.columns) - set(feature_columns)
-
-# if missing or extra:
-#     raise ValueError(f"Feature mismatch. Missing: {missing}, Extra: {extra}")
-
 @app.post("/predict")
 def predict(data: dict):
 
@@ -28,18 +22,6 @@ def predict(data: dict):
         nafdac_risk = features["nafdac_risk"]
 
         nafdac_reg = data["nafdac_reg"]
-
-        # if (
-        #     "-" not in nafdac_reg
-        #     or len(nafdac_reg) < 7
-        #     or len(nafdac_reg) > 8
-        #     or "12345678" in nafdac_reg
-        # ):
-        #     return {
-        #         "status": "Counterfeit",
-        #         "probability_fake": 80.0,
-        #         "reason": "Invalid NAFDAC registration number"
-        #     }
 
         X = pd.DataFrame([features])[feature_columns]
 
@@ -51,12 +33,9 @@ def predict(data: dict):
         if shelf_life_days > 2500:
             prob_fake += 0.3
 
-        # prob_fake += nafdac_risk * 0.8
-
         prob_fake = min(prob_fake, 1.0)
 
-        # if (nafdac_reg != ""):
-        #     print("NAFDAC REG:", nafdac_reg)
+
         if (
             "-" not in nafdac_reg
             or len(nafdac_reg) < 7
@@ -67,9 +46,6 @@ def predict(data: dict):
                 prob_fake += 0.8
             else:
                 prob_fake += (1-prob_fake) * 0.8
-
-        # if shelf_life_days > 1826:
-        #     prob_fake += min(0.4, (shelf_life_days - 1826) / 3000)
 
         print(type(prob_fake))
         print(prob_fake)
