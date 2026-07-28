@@ -1,5 +1,9 @@
 const Database = require('better-sqlite3');
-const db = new Database('C:\\Users\\Admin\\.spyder-py3\\registered_drugs1.db');
+const path = require("path");
+
+const db = new Database(
+    path.join(__dirname, "..", "database", "registered_drugs1.db")
+);
 
 const axios = require('axios');
 const FASTAPI_URL = 'http://127.0.0.1:8000/predict';   // Your FastAPI URL
