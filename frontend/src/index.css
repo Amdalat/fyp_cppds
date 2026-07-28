@@ -1,8 +1,5 @@
 body{
-    /* background-color: rgb(15, 15, 75); */
-    /* background-color: darkcyan; */
     background-color: darkslateblue;
-   
     color: white;
 }
 
@@ -21,10 +18,24 @@ body{
     background: none;
 }
 
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 8;
+}
+
 #helppg{
     position: absolute;
-    top: 20%;
-    left: 35%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 400px;
     background-color: rgba(0, 0, 0, 0.938);
     border-radius: 20px;
@@ -50,6 +61,7 @@ li{
 
 .hero{
     display: flex;
+    align-items: center;
     justify-content: space-around;
 }
 
@@ -66,7 +78,6 @@ form{
     display: flex;
     flex-direction: column;
 }
-
 
 input{
     border-radius: 10px;
@@ -101,4 +112,23 @@ button{
     justify-content: center;
     border-radius: 10px;
     height: 85vh;
+}
+
+@media (max-width: 640px) {
+    .hero {
+        height: fit-content;
+        flex-direction: column;
+    }
+    .left{
+        height: fit-content;
+        margin: 100px 0 20px 0;
+    }
+    .right{
+        width: 80%;
+        height: fit-content;
+        padding: 20px 0;
+    }
+    #helppg{
+        width: 300px;
+    }
 }
