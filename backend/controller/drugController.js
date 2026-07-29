@@ -6,7 +6,8 @@ const db = new Database(
 );
 
 const axios = require('axios');
-// const FASTAPI_URL = 'http://127.0.0.1:8000/predict';  
+// const FASTAPI_URL = 'http://127.0.0.1:8000/predict'; 
+console.log("FASTAPI_URL:", process.env.FASTAPI_URL); 
 
 const mlapi = async (req, res, manufacturer, batch_number, serial_number, manuf_date, expiry_date, nafdac_reg) => {
   try {
@@ -34,6 +35,9 @@ const mlapi = async (req, res, manufacturer, batch_number, serial_number, manuf_
 
     if (mlError.response) {
       console.error(mlError.response.data);
+        console.log("Status:", mlError.response?.status);
+        console.log("Headers:", mlError.response?.headers);
+        console.log("Body:", mlError.response?.data);
     } else {
       console.error(mlError.message);
     }
@@ -77,7 +81,7 @@ const dbCheck = async (req, res) => {
           status: "Counterfeit",
           source: "database",
           db_match: true,
-          probability_fake: fake_count,
+          probability_fake: fake_count.toFixed(2),
           details: drug
         });
       }
@@ -122,6 +126,16 @@ const verifyDrug = async (req, res) => {
 
     if (drug) {
       console.log("Drug found in database:", drug);
+
+      const hasExtraDetails =
+        manufacturer &&
+        manuf_date &&
+        expiry_date &&
+        nafdac_reg;
+
+      if (drug && hasExtraDetails) {
+          return dbCheck(req, res);
+      }
 
       return res.status(200).json({
         status: "Genuine",

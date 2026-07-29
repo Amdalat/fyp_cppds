@@ -200,7 +200,12 @@ function Pg1() {
             )}
             <div className='left'>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <h2>Drug Checker</h2> 
+                    { dbCheck? (
+                        <h2>Deep Drug Checker</h2>
+                    ): (
+                        <h2>Drug Checker</h2>
+                    )}
+                    {/* <h2>Drug Checker</h2>  */}
                     <button id="help" onClick={() => setShowHelp(true)}>?</button>
                 </div>
                 
