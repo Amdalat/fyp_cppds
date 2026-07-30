@@ -16,6 +16,7 @@ def build_features(data, le_manuf, le_batch, le_serial):
     expiry_date = pd.to_datetime(data["expiry_date"]).toordinal()
 
     batch_prefix = batch_number
+    serial_length = len(batch_number) + len(serial_postfix) + 5
 
     manuf_after_expiry = int(manuf_date > expiry_date)
     shelf_life_days = expiry_date - manuf_date
@@ -24,7 +25,7 @@ def build_features(data, le_manuf, le_batch, le_serial):
     nafdac_risk = (
         (0 if "-" in nafdac_reg else 0.3)
         + max(0, (7 - len(nafdac_reg))) * 0.2
-        + max(0, (len(nafdac_reg) - 8)) * 0.15
+        + max(0, (len(nafdac_reg) - 9)) * 0.15
         + (0.5 if "12345678" in nafdac_reg else 0)
     )
 
@@ -35,9 +36,10 @@ def build_features(data, le_manuf, le_batch, le_serial):
         "has_hyphen_nafdac": int("-" in nafdac_reg),
         "nafdac_length": len(nafdac_reg),
 
-        "batch_length": len(batch_number),
+        "batch_length": len(batch_number)+4,
         "serial_has_sn": int("SN" in serial_postfix),
-        "serial_length": len(serial_postfix),
+        
+        "serial_length": serial_length,
         
         "manufacturer_enc": safe_transform(le_manuf, manufacturer),
         "batch_prefix_enc": safe_transform(le_batch, batch_prefix),
@@ -51,13 +53,13 @@ def build_features(data, le_manuf, le_batch, le_serial):
         "suspicious_nafdac": int(
             "-" not in nafdac_reg
             or len(nafdac_reg) < 7
-            or len(nafdac_reg) > 8
+            or len(nafdac_reg) > 9
             or "12345678" in nafdac_reg
         ),
 
         "nafdac_risk": nafdac_risk,
 
-        "weird_serial": int(len(serial_postfix) < 15),
+        "weird_serial": int(serial_length < 22 or serial_length > 25),
 
         "manuf_after_expiry": int(manuf_date > expiry_date),
         "very_long_shelf_life": int(shelf_life_days > 1826),
