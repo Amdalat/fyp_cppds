@@ -2,9 +2,7 @@ from fastapi import FastAPI
 import joblib
 import pandas as pd
 from features import build_features
-import traceback
-
-import os
+# import traceback
 
 app = FastAPI()
 
@@ -15,11 +13,6 @@ le_serial = joblib.load("serial_postfix_encoder2.pkl")
 feature_columns = joblib.load("feature_columns2.pkl")
 
 THRESHOLD = 0.25
-
-print("Loading model from:", os.path.abspath("pharma_fake_detector_xgb2.pkl"))
-print("Feature columns file:", os.path.abspath("feature_columns2.pkl"))
-print(type(model))
-print(model)
 
 @app.post("/predict")
 def predict(data: dict):
@@ -76,5 +69,5 @@ def predict(data: dict):
         }
 
     except Exception as e:
-        traceback.print_exc()
+        # traceback.print_exc()
         return {"error": str(e), "msg":"1"}
